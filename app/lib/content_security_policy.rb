@@ -10,7 +10,13 @@ class ContentSecurityPolicy
   end
 
   def media_hosts
-    [assets_host, cdn_host_value, paperclip_root_url].concat(extra_media_hosts).compact
+    [assets_host,
+      'https://staging-dashboard.patchwork.online/',
+      'https://dashboard.channel.org/',
+      'https://s3-eu-west-2.amazonaws.com/newsmast',
+      'https://s3-eu-west-2.amazonaws.com',
+      'https://s3-eu-west-2.amazonaws.com/newsmast/mammoth/communities/images',
+     cdn_host_value, paperclip_root_url].concat(extra_media_hosts).compact
   end
 
   def sso_host

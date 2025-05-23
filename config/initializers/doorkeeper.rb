@@ -10,8 +10,16 @@ Doorkeeper.configure do
   end
 
   # Disable Resource Owner Password Credentials Grant Flow
-  resource_owner_from_credentials do
-    nil
+  resource_owner_from_credentials do |_routes|
+    user   = User.authenticate_with_ldap(email: request.params[:username], password: request.params[:password]) if Devise.ldap_authentication
+    user ||= User.authenticate_with_pam(email: request.params[:username], password: request.params[:password]) if Devise.pam_authentication
+
+    if user.nil?
+      user = User.find_by(email: request.params[:username])
+      user = nil unless user&.valid_password?(request.params[:password])
+    end
+
+    user unless user&.otp_required_for_login?
   end
 
   # Doorkeeper provides some administrative interfaces for managing OAuth

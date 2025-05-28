@@ -10,17 +10,9 @@ GIT
 GIT
   remote: https://github.com/patchwork-hub/accounts
   revision: fd0330b23b47cce515a551aaffeb96feaacfc104
-  specs:
-    accounts (0.1.0)
-      byebug
-      rails (~> 8.0)
-
-GIT
-  remote: https://github.com/patchwork-hub/posts
-  revision: b06b4f07b40e214dadae8a85eb201e2646ccc481
   branch: main
   specs:
-    posts (0.1.0)
+    accounts (0.1.0)
       byebug
       rails (~> 8.0)
 
@@ -1046,7 +1038,6 @@ DEPENDENCIES
   parslet
   pg (~> 1.5)
   pghero
-  posts!
   premailer-rails
   prometheus_exporter (~> 2.2)
   propshaft

@@ -9,10 +9,31 @@ GIT
 
 GIT
   remote: https://github.com/patchwork-hub/accounts
-  revision: fd0330b23b47cce515a551aaffeb96feaacfc104
+  revision: 95bee25097f70cee6496ea479ce3c5c1d9a948c6
   branch: main
   specs:
     accounts (0.1.0)
+      annotaterb
+      byebug
+      rails (~> 8.0)
+
+GIT
+  remote: https://github.com/patchwork-hub/conversations
+  revision: b3d6536093ceeb8576437a0f0e3732a7568017ef
+  branch: main
+  specs:
+    conversations (0.1.0)
+      annotaterb
+      byebug
+      rails (~> 8.0)
+
+GIT
+  remote: https://github.com/patchwork-hub/posts
+  revision: 53ae46619820d68b0d0b69010364db605e00ad5d
+  branch: main
+  specs:
+    posts (0.1.0)
+      annotaterb
       byebug
       rails (~> 8.0)
 
@@ -962,6 +983,7 @@ DEPENDENCIES
   color_diff (~> 0.1)
   concurrent-ruby
   connection_pool
+  conversations!
   csv (~> 3.2)
   database_cleaner-active_record
   debug (~> 1.8)
@@ -1038,6 +1060,7 @@ DEPENDENCIES
   parslet
   pg (~> 1.5)
   pghero
+  posts!
   premailer-rails
   prometheus_exporter (~> 2.2)
   propshaft

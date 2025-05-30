@@ -19,7 +19,7 @@ GIT
 
 GIT
   remote: https://github.com/patchwork-hub/conversations
-  revision: b3d6536093ceeb8576437a0f0e3732a7568017ef
+  revision: 0f74e46cf7e662f4507bce909b71a8f6b719f2ae
   branch: main
   specs:
     conversations (0.1.0)

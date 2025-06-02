@@ -9,7 +9,7 @@ GIT
 
 GIT
   remote: https://github.com/patchwork-hub/accounts
-  revision: c7346c473215563a40c969d5c102ef82c68b71ac
+  revision: 1fbe846fad7cf148fb3d6d6de77fc31a51af2730
   branch: main
   specs:
     accounts (0.1.0)
@@ -975,6 +975,7 @@ DEPENDENCIES
   brakeman (~> 7.0)
   browser
   bundler-audit (~> 0.9)
+  byebug
   capybara (~> 3.39)
   charlock_holmes (~> 0.7.7)
   chewy (~> 7.3)

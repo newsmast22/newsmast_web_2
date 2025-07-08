@@ -312,7 +312,27 @@ namespace :api, format: false do
       resources :tags, only: [:index, :show, :update]
     end
 
-    post 'app_versions/check_version', to: proc { [200, { 'Content-Type' => 'application/json' }, [{ app_version: 0, os_type: nil, deprecated: true, link_url: nil  }.to_json]] }
+    require 'rack'
+    post 'app_versions/check_version', to: proc { |env|
+      req = Rack::Request.new(env)
+      current_app_version = req.params['current_app_version']
+      os_type = req.params['os_type']
+
+      [
+        200,
+        { 'Content-Type' => 'application/json' },
+        [{
+          app_version_id: '4.0.0',
+          os_type: os_type,
+          deprecated: true,
+          link_url: nil,
+          created_at: "2025-07-08T15:39:08.125Z",
+          updated_at: "2025-07-08T15:40:10.795Z"
+        }.to_json]
+      ]
+    }
+
+    #post 'app_versions/check_version', to: proc { [200, { 'Content-Type' => 'application/json' }, [{ app_version: 0, os_type: nil, deprecated: true, link_url: nil  }.to_json]] }
   end
 
   namespace :v2 do

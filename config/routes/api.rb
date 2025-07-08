@@ -311,6 +311,8 @@ namespace :api, format: false do
 
       resources :tags, only: [:index, :show, :update]
     end
+
+    post 'app_versions/check_version', to: proc { [200, { 'Content-Type' => 'application/json' }, [{ app_version: 0, os_type: nil, deprecated: true, link_url: nil  }.to_json]] }
   end
 
   namespace :v2 do

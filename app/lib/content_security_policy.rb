@@ -16,6 +16,7 @@ class ContentSecurityPolicy
       'https://s3-eu-west-2.amazonaws.com/newsmast',
       'https://s3-eu-west-2.amazonaws.com',
       'https://s3-eu-west-2.amazonaws.com/newsmast/mammoth/communities/images',
+      'https://s3-eu-west-2.amazonaws.com/newsmast/cache/media_attachments/files'
      cdn_host_value, paperclip_root_url].concat(extra_media_hosts).compact
   end
 

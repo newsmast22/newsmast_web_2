@@ -9,7 +9,7 @@ GIT
 
 GIT
   remote: https://github.com/patchwork-hub/accounts
-  revision: a7bd8aeded0b2350d7c53d88fdfbbd5a14f06d89
+  revision: 156882f07efe9ac38072fc263b3922b1c78e9bfb
   branch: main
   specs:
     accounts (0.1.0)

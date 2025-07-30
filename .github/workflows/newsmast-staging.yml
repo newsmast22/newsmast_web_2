@@ -224,7 +224,7 @@ jobs:
           image: ${{ secrets.WEB_STAGING_IMAGE }}
 
       - name: Deploy web service
-        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
         with:
           task-definition: ${{ steps.task-def-web.outputs.task-definition }}
           service: ${{ secrets.WEB_STAGING_SERVICE_NAME }}
@@ -240,7 +240,7 @@ jobs:
           image: ${{ secrets.WEB_STAGING_IMAGE }}
 
       - name: Deploy Sidekiq service
-        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
         with:
           task-definition: ${{ steps.task-def-sidekiq.outputs.task-definition }}
           service: ${{ secrets.SIDEKIQ_STAGING_SERVICE_NAME }}
@@ -255,7 +255,7 @@ jobs:
           container-name: ${{ secrets.STREAMING_STAGING_CONTAINER_NAME }}
           image: ${{ secrets.STREAMING_STAGING_IMAGE }} 
       - name: Deploy Streaming service
-        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
         with:
           task-definition: ${{ steps.task-def-streaming.outputs.task-definition }}
           service: ${{ secrets.STREAMING_STAGING_SERVICE_NAME }}

@@ -1,9 +1,9 @@
 {
-    "taskDefinitionArn": "arn:aws:ecs:eu-west-2:672691776916:task-definition/newsmast-sidekiq-staging:1324",
+    "taskDefinitionArn": "arn:aws:ecs:eu-west-2:672691776916:task-definition/newsmast-sidekiq-staging:1327",
     "containerDefinitions": [
         {
             "name": "newsmast-sidekiq-staging",
-            "image": "672691776916.dkr.ecr.eu-west-2.amazonaws.com/newsmast-web-prod:prod",
+            "image": "672691776916.dkr.ecr.eu-west-2.amazonaws.com/newsmast-web-prod:staging",
             "cpu": 0,
             "portMappings": [],
             "essential": true,
@@ -41,7 +41,7 @@
     "taskRoleArn": "arn:aws:iam::672691776916:role/patchwork-ecs-task-role",
     "executionRoleArn": "arn:aws:iam::672691776916:role/patchwork-ecs-task-execution-role",
     "networkMode": "awsvpc",
-    "revision": 1324,
+    "revision": 1327,
     "volumes": [],
     "status": "ACTIVE",
     "requiresAttributes": [
@@ -96,7 +96,7 @@
         "cpuArchitecture": "X86_64",
         "operatingSystemFamily": "LINUX"
     },
-    "registeredAt": "2025-07-10T13:05:53.096Z",
+    "registeredAt": "2025-07-30T08:49:30.846Z",
     "registeredBy": "arn:aws:iam::672691776916:user/ahn",
     "enableFaultInjection": false,
     "tags": []

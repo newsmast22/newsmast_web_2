@@ -34,7 +34,8 @@ class TagsIndex < Chewy::Index
     },
   }
 
-  index_scope ::Tag.listable
+  # CUSTOMIZED CODE < Adding index_scope to without_banned >
+  index_scope ::Tag.listable.without_banned
 
   crutch :time_period do
     7.days.ago.to_date..0.days.ago.to_date

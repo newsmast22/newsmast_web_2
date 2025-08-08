@@ -19,6 +19,14 @@ GIT
       rails (~> 8.0)
 
 GIT
+  remote: https://github.com/patchwork-hub/content_filters
+  revision: a06b9de126af5f4ac8299c64d34f76cc25372dc6
+  branch: main
+  specs:
+    content_filters (0.1.0)
+      rails (>= 7.1.1)
+
+GIT
   remote: https://github.com/patchwork-hub/conversations
   revision: c92f4b11891bfc6a21390776e403e314f6936b3e
   branch: main
@@ -1009,6 +1017,7 @@ DEPENDENCIES
   color_diff (~> 0.1)
   concurrent-ruby
   connection_pool
+  content_filters!
   conversations!
   csv (~> 3.2)
   database_cleaner-active_record

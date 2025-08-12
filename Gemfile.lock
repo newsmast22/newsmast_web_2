@@ -9,8 +9,8 @@ GIT
 
 GIT
   remote: https://github.com/patchwork-hub/accounts
-  revision: 156882f07efe9ac38072fc263b3922b1c78e9bfb
-  branch: main
+  revision: fe751796332725b9f0461b71aa1973b0b1a02c0b
+  branch: update-mastodon
   specs:
     accounts (0.1.0)
       byebug
@@ -38,12 +38,13 @@ GIT
 
 GIT
   remote: https://github.com/patchwork-hub/posts
-  revision: 40272ad9f9d5f1352d99ded463d889f53548c411
+  revision: f1317a0eaef8538d7eb73b35b17b186ae03ed6ee
   branch: main
   specs:
     posts (0.1.0)
       annotaterb
       byebug
+      link_thumbnailer
       rails (~> 8.0)
 
 GEM
@@ -132,6 +133,7 @@ GEM
     annotaterb (4.16.0)
       activerecord (>= 6.0.0)
       activesupport (>= 6.0.0)
+    ansi (1.5.0)
     ast (2.4.3)
     attr_required (1.0.2)
     aws-eventstream (1.3.2)
@@ -268,6 +270,8 @@ GEM
     erubi (1.13.1)
     et-orbi (1.2.11)
       tzinfo
+    ethon (0.16.0)
+      ffi (>= 1.15.0)
     excon (1.2.5)
       logger
     fabrication (3.0.0)
@@ -388,6 +392,11 @@ GEM
       ruby-progressbar (~> 1.8, >= 1.8.1)
       terminal-table (>= 1.5.1)
     idn-ruby (0.1.5)
+    image_info (1.2.2)
+      addressable (~> 2.0)
+      image_size (~> 2.0)
+      typhoeus (~> 1.0)
+    image_size (2.1.2)
     inline_svg (1.10.0)
       activesupport (>= 3.0)
       nokogiri (>= 1.6)
@@ -396,6 +405,7 @@ GEM
       pp (>= 0.6.0)
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
+    iso8601 (0.13.0)
     jd-paperclip-azure (3.0.0)
       addressable (~> 2.5)
       azure-blob (~> 0.5.2)
@@ -458,6 +468,14 @@ GEM
       railties (>= 6.1)
       rexml
     link_header (0.0.8)
+    link_thumbnailer (3.4.0)
+      activesupport (>= 3.0)
+      image_info (~> 1.0, >= 1.2.0)
+      json (>= 1.7.7)
+      net-http-persistent (>= 2.9)
+      nokogiri (>= 1.6)
+      rake (>= 0.9)
+      video_info (>= 2.6)
     lint_roller (1.1.0)
     linzer (0.7.3)
       cgi (~> 0.4.2)
@@ -505,6 +523,8 @@ GEM
     mutex_m (0.3.0)
     net-http (0.6.0)
       uri
+    net-http-persistent (4.0.6)
+      connection_pool (~> 2.2, >= 2.2.4)
     net-imap (0.5.8)
       date
       net-protocol
@@ -515,10 +535,14 @@ GEM
       timeout
     net-smtp (0.5.1)
       net-protocol
+    net_http_timeout_errors (1.0.0)
     nio4r (2.7.4)
     nokogiri (1.18.9)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
+    oga (3.4)
+      ast
+      ruby-ll (~> 2.1)
     oj (3.16.11)
       bigdecimal (>= 3.0)
       ostruct (>= 0.2)
@@ -857,6 +881,9 @@ GEM
       lint_roller (~> 1.1)
       rubocop (~> 1.72, >= 1.72.1)
       rubocop-rspec (~> 3.5)
+    ruby-ll (2.1.3)
+      ansi
+      ast
     ruby-prof (1.7.2)
       base64
     ruby-progressbar (1.13.0)
@@ -953,6 +980,8 @@ GEM
     twitter-text (3.1.0)
       idn-ruby
       unf (~> 0.1.0)
+    typhoeus (1.4.1)
+      ethon (>= 0.9.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     tzinfo-data (1.2025.2)
@@ -968,6 +997,10 @@ GEM
     validate_url (1.0.15)
       activemodel (>= 3.0.0)
       public_suffix
+    video_info (4.2.0)
+      iso8601 (~> 0.13.0)
+      net_http_timeout_errors (~> 1.0.0)
+      oga (~> 3.4)
     vite_rails (3.0.19)
       railties (>= 5.1, < 9)
       vite_ruby (~> 3.0, >= 3.2.2)

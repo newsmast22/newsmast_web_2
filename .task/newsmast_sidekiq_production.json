@@ -81,7 +81,7 @@
         "FARGATE"
     ],
     "cpu": "2048",
-    "memory": "5120",
+    "memory": "4096",
     "runtimePlatform": {
         "cpuArchitecture": "X86_64",
         "operatingSystemFamily": "LINUX"

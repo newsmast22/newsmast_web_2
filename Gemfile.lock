@@ -38,13 +38,13 @@ GIT
 
 GIT
   remote: https://github.com/patchwork-hub/posts
-  revision: 9ef5942b385ef5ce970e5c0e4dcf1d042476a79f
+  revision: 490ce7b8a7d0b0dee3b2500cc3cb4c0b8322ee01
   branch: main
   specs:
     posts (0.1.0)
-      annotaterb
-      byebug
-      link_thumbnailer
+      annotaterb (~> 4.13)
+      byebug (~> 11.1)
+      link_thumbnailer (~> 3.4)
       rails (~> 8.0)
 
 GEM

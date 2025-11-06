@@ -9,8 +9,8 @@ GIT
 
 GIT
   remote: https://github.com/patchwork-hub/accounts
-  revision: fd84cb09bec75b1b027465496effe969fd80686a
-  branch: main
+  revision: b688dda10d72a5ead2125d9a5e0d3ac195f126c6
+  branch: mastodon-update-account
   specs:
     accounts (0.1.0)
       byebug (~> 11.1)
@@ -20,25 +20,26 @@ GIT
 
 GIT
   remote: https://github.com/patchwork-hub/content_filters
-  revision: 862288d7a5ebf8c7f5421299b4941c6078632f0a
+  revision: 4e769377cf7a17e22f4c8acd98c471a5c8711c5c
   branch: main
   specs:
     content_filters (0.1.0)
-      rails (>= 7.1.1)
+      httparty (~> 0.23.1)
+      rails (~> 8.0)
 
 GIT
   remote: https://github.com/patchwork-hub/conversations
-  revision: c92f4b11891bfc6a21390776e403e314f6936b3e
+  revision: f9e15a6313e90633a8d2e0c73e40d5ce0ddff0b8
   branch: main
   specs:
     conversations (0.1.0)
-      annotaterb
-      byebug
+      annotaterb (~> 4.13)
+      byebug (~> 11.1)
       rails (~> 8.0)
 
 GIT
   remote: https://github.com/patchwork-hub/posts
-  revision: 305905dab6def3156da24132c7ebd39b05ad24fc
+  revision: d6da16ab60cfe59b46373b27c4b1fcad51bf29a5
   branch: main
   specs:
     posts (0.1.0)
@@ -157,12 +158,12 @@ GEM
     base64 (0.3.0)
     bcp47_spec (0.2.1)
     bcrypt (3.1.20)
-    benchmark (0.4.1)
+    benchmark (0.5.0)
     better_errors (2.10.1)
       erubi (>= 1.0.0)
       rack (>= 0.9.0)
       rouge (>= 1.0.0)
-    bigdecimal (3.2.2)
+    bigdecimal (3.3.1)
     bindata (2.5.1)
     binding_of_caller (1.0.1)
       debug_inspector (>= 1.2.0)
@@ -206,7 +207,7 @@ GEM
     cocoon (1.2.15)
     color_diff (0.1)
     concurrent-ruby (1.3.5)
-    connection_pool (2.5.3)
+    connection_pool (2.5.4)
     cose (1.3.1)
       cbor (~> 0.5.9)
       openssl-signature_algorithm (~> 1.0)
@@ -221,7 +222,7 @@ GEM
       activerecord (>= 5.a)
       database_cleaner-core (~> 2.0.0)
     database_cleaner-core (2.0.1)
-    date (3.4.1)
+    date (3.5.0)
     debug (1.11.0)
       irb (~> 1.10)
       reline (>= 0.3.8)
@@ -249,7 +250,7 @@ GEM
       railties (>= 5)
     dotenv (3.1.8)
     drb (2.2.3)
-    dry-cli (1.2.0)
+    dry-cli (1.3.0)
     elasticsearch (7.17.11)
       elasticsearch-api (= 7.17.11)
       elasticsearch-transport (= 7.17.11)
@@ -266,7 +267,7 @@ GEM
       mail (~> 2.7)
     email_validator (2.2.4)
       activemodel
-    erb (5.0.1)
+    erb (5.1.3)
     erubi (1.13.1)
     et-orbi (1.2.11)
       tzinfo
@@ -291,6 +292,7 @@ GEM
     fastimage (2.4.0)
     ffi (1.17.2)
     ffi (1.17.2-x86_64-darwin)
+    ffi (1.17.2-x86_64-linux-gnu)
     ffi-compiler (1.3.2)
       ffi (>= 1.15.5)
       rake
@@ -326,6 +328,9 @@ GEM
       bigdecimal
       rake (>= 13)
     google-protobuf (4.31.0-x86_64-darwin)
+      bigdecimal
+      rake (>= 13)
+    google-protobuf (4.31.0-x86_64-linux-gnu)
       bigdecimal
       rake (>= 13)
     googleapis-common-protos-types (1.20.0)
@@ -373,7 +378,7 @@ GEM
       domain_name (~> 0.5)
     http-form_data (2.3.0)
     http_accept_language (2.1.1)
-    httparty (0.23.1)
+    httparty (0.23.2)
       csv
       mini_mime (>= 1.0.0)
       multi_xml (>= 0.5.2)
@@ -404,8 +409,8 @@ GEM
     inline_svg (1.10.0)
       activesupport (>= 3.0)
       nokogiri (>= 1.6)
-    io-console (0.8.0)
-    irb (1.15.2)
+    io-console (0.8.1)
+    irb (1.15.3)
       pp (>= 0.6.0)
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
@@ -518,7 +523,7 @@ GEM
       mime-types-data (~> 3.2025, >= 3.2025.0507)
     mime-types-data (3.2025.0514)
     mini_mime (1.1.5)
-    minitest (5.25.5)
+    minitest (5.26.0)
     msgpack (1.8.0)
     multi_json (1.15.0)
     multi_xml (0.7.2)
@@ -540,7 +545,9 @@ GEM
       net-protocol
     net_http_timeout_errors (1.0.0)
     nio4r (2.7.4)
-    nokogiri (1.18.9-x86_64-darwin)
+    nokogiri (1.18.10-x86_64-darwin)
+      racc (~> 1.4)
+    nokogiri (1.18.10-x86_64-linux-gnu)
       racc (~> 1.4)
     oga (3.4)
       ast
@@ -698,7 +705,7 @@ GEM
     playwright-ruby-client (1.52.0)
       concurrent-ruby (>= 1.1.6)
       mime-types (>= 3.0)
-    pp (0.6.2)
+    pp (0.6.3)
       prettyprint
     premailer (1.27.0)
       addressable
@@ -727,7 +734,7 @@ GEM
       activesupport (>= 3.0.0)
     raabro (1.4.0)
     racc (1.8.1)
-    rack (3.1.18)
+    rack (3.2.4)
     rack-attack (6.7.0)
       rack (>= 1.0, < 4)
     rack-cors (3.0.0)
@@ -767,7 +774,7 @@ GEM
       activesupport (= 8.0.2.1)
       bundler (>= 1.15.0)
       railties (= 8.0.2.1)
-    rails-dom-testing (2.2.0)
+    rails-dom-testing (2.3.0)
       activesupport (>= 5.0.0)
       minitest
       nokogiri (>= 1.6)
@@ -786,16 +793,17 @@ GEM
       thor (~> 1.0, >= 1.2.2)
       zeitwerk (~> 2.6)
     rainbow (3.1.1)
-    rake (13.3.0)
+    rake (13.3.1)
     rdf (3.3.2)
       bcp47_spec (~> 0.2)
       bigdecimal (~> 3.1, >= 3.1.5)
       link_header (~> 0.0, >= 0.0.8)
     rdf-normalize (0.7.0)
       rdf (~> 3.3)
-    rdoc (6.14.1)
+    rdoc (6.15.1)
       erb
       psych (>= 4.0.0)
+      tsort
     redcarpet (3.6.1)
     redis (4.8.1)
     redis-client (0.24.0)
@@ -803,7 +811,7 @@ GEM
     redlock (1.3.2)
       redis (>= 3.0.0, < 6.0)
     regexp_parser (2.10.0)
-    reline (0.6.1)
+    reline (0.6.2)
       io-console (~> 0.5)
     request_store (1.7.0)
       rack (>= 1.4)
@@ -969,6 +977,7 @@ GEM
       bindata (~> 2.4)
       openssl (> 2.0)
       openssl-signature_algorithm (~> 1.0)
+    tsort (0.2.0)
     tty-color (0.6.0)
     tty-cursor (0.7.1)
     tty-prompt (0.23.1)
@@ -994,7 +1003,7 @@ GEM
     unicode-display_width (3.1.4)
       unicode-emoji (~> 4.0, >= 4.0.4)
     unicode-emoji (4.0.4)
-    uri (1.0.4)
+    uri (1.1.1)
     useragent (0.16.11)
     validate_url (1.0.15)
       activemodel (>= 3.0.0)
@@ -1043,6 +1052,8 @@ GEM
 
 PLATFORMS
   x86_64-darwin-23
+  x86_64-darwin-24
+  x86_64-linux
 
 DEPENDENCIES
   accounts!

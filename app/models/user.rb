@@ -16,9 +16,6 @@
 #  did_value                 :string
 #  disabled                  :boolean          default(FALSE), not null
 #  email                     :string           default(""), not null
-#  encrypted_otp_secret      :string
-#  encrypted_otp_secret_iv   :string
-#  encrypted_otp_secret_salt :string
 #  encrypted_password        :string           default(""), not null
 #  last_emailed_at           :datetime
 #  last_sign_in_at           :datetime
@@ -26,6 +23,7 @@
 #  otp_backup_codes          :string           is an Array
 #  otp_required_for_login    :boolean          default(FALSE), not null
 #  otp_secret                :string
+#  require_tos_interstitial  :boolean          default(FALSE), not null
 #  reset_password_sent_at    :datetime
 #  reset_password_token      :string
 #  settings                  :text
@@ -46,14 +44,17 @@
 
 class User < ApplicationRecord
   self.ignored_columns += %w(
+    admin
+    current_sign_in_ip
+    encrypted_otp_secret
+    encrypted_otp_secret_iv
+    encrypted_otp_secret_salt
+    filtered_languages
+    last_sign_in_ip
+    moderator
     remember_created_at
     remember_token
-    current_sign_in_ip
-    last_sign_in_ip
     skip_sign_in_token
-    filtered_languages
-    admin
-    moderator
   )
 
   include LanguagesHelper
@@ -73,10 +74,7 @@ class User < ApplicationRecord
   ACTIVE_DURATION = ENV.fetch('USER_ACTIVE_DAYS', 7).to_i.days.freeze
 
   devise :two_factor_authenticatable,
-         otp_secret_encryption_key: Rails.configuration.x.otp_secret,
          otp_secret_length: 32
-
-  include LegacyOtpSecret # Must be after the above `devise` line in order to override the legacy method
 
   devise :two_factor_backupable,
          otp_number_of_backup_codes: 10
@@ -145,7 +143,9 @@ class User < ApplicationRecord
   delegate :can?, to: :role
 
   attr_reader :invite_code, :date_of_birth
-  attr_writer :external, :bypass_registration_checks, :current_account
+  attr_writer :external, :current_account
+
+  attribute :bypass_registration_checks, :boolean, default: false
 
   def self.those_who_can(*any_of_privileges)
     matching_role_ids = UserRole.that_can(*any_of_privileges).map(&:id)
@@ -198,6 +198,10 @@ class User < ApplicationRecord
 
   def disable!
     update!(disabled: true)
+
+    # This terminates all connections for the given account with the streaming
+    # server:
+    redis.publish("timeline:system:#{account.id}", Oj.dump(event: :kill))
   end
 
   def enable!
@@ -224,6 +228,12 @@ class User < ApplicationRecord
       skip_confirmation!
       save!
     end
+  end
+
+  def email_domain
+    Mail::Address.new(email).domain
+  rescue Mail::Field::ParseError
+    nil
   end
 
   def update_sign_in!(new_sign_in: false)
@@ -384,17 +394,22 @@ class User < ApplicationRecord
   end
 
   def reset_password!
+    # First, change password to something random, this revokes sessions and on-going access:
+    change_password!(SecureRandom.hex)
+
+    # Finally, send a reset password prompt to the user
+    send_reset_password_instructions
+  end
+
+  def change_password!(new_password)
     # First, change password to something random and deactivate all sessions
     transaction do
-      update(password: SecureRandom.hex)
+      update(password: new_password)
       session_activations.destroy_all
     end
 
     # Then, remove all authorized applications and connected push subscriptions
     revoke_access!
-
-    # Finally, send a reset password prompt to the user
-    send_reset_password_instructions
   end
 
   protected
@@ -502,10 +517,6 @@ class User < ApplicationRecord
     !!@external
   end
 
-  def bypass_registration_checks?
-    @bypass_registration_checks
-  end
-
   def sanitize_role
     self.role = nil if role.present? && role.everyone?
   end
@@ -534,7 +545,11 @@ class User < ApplicationRecord
   end
 
   def regenerate_feed!
-    RegenerationWorker.perform_async(account_id) if redis.set("account:#{account_id}:regeneration", true, nx: true, ex: 1.day.seconds)
+    home_feed = HomeFeed.new(account)
+    unless home_feed.regenerating?
+      home_feed.regeneration_in_progress!
+      RegenerationWorker.perform_async(account_id)
+    end
   end
 
   def needs_feed_update?

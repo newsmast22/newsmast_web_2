@@ -120,12 +120,14 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: ${{ secrets.REPOSITORY }}
           IMAGE_TAG: ${{ vars.IMAGE_TAG }}
+          SOURCE_COMMIT: ${{ github.sha }}
         run: |
           echo "Building web application image..."
           docker buildx build \
             --platform linux/amd64 \
             --cache-from type=local,src=/tmp/.buildx-cache \
             --cache-to type=local,dest=/tmp/.buildx-cache-new,mode=max \
+            --build-arg SOURCE_COMMIT="${SOURCE_COMMIT}" \
             --tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG \
             --push \
             .
@@ -175,6 +177,7 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: ${{ secrets.REPOSITORY }}
           IMAGE_TAG: ${{ vars.STREAMING_STAGING_IMAGE_TAG }}
+          SOURCE_COMMIT: ${{ github.sha }}
         run: |
           echo "Building streaming service image..."
           docker buildx build \
@@ -182,6 +185,7 @@ jobs:
             --file ./streaming/Dockerfile \
             --cache-from type=local,src=/tmp/.buildx-cache-streaming \
             --cache-to type=local,dest=/tmp/.buildx-cache-streaming-new,mode=max \
+            --build-arg SOURCE_COMMIT="${SOURCE_COMMIT}" \
             --tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG \
             --push \
             .
@@ -221,7 +225,7 @@ jobs:
         with:
           task-definition: ${{ env.WEB_DEFINITION }}
           container-name: ${{ secrets.WEB_STAGING_CONTAINER }}
-          image: ${{ secrets.WEB_STAGING_IMAGE }}
+          image: ${{ steps.login-ecr.outputs.registry }}/${{ secrets.REPOSITORY }}:${{ vars.IMAGE_TAG }}
 
       - name: Deploy web service
         uses: aws-actions/amazon-ecs-deploy-task-definition@v2
@@ -237,7 +241,7 @@ jobs:
         with:
           task-definition: ${{ env.SIDEKIQ_DEFINITION }}
           container-name: ${{ secrets.SIDEKIQ_STAGING_CONTAINER_NAME }}
-          image: ${{ secrets.WEB_STAGING_IMAGE }}
+          image: ${{ steps.login-ecr.outputs.registry }}/${{ secrets.REPOSITORY }}:${{ vars.IMAGE_TAG }}
 
       - name: Deploy Sidekiq service
         uses: aws-actions/amazon-ecs-deploy-task-definition@v2
@@ -253,7 +257,7 @@ jobs:
         with:
           task-definition: ${{ env.STREAMING_DEFINITION }}
           container-name: ${{ secrets.STREAMING_STAGING_CONTAINER_NAME }}
-          image: ${{ secrets.STREAMING_STAGING_IMAGE }} 
+          image: ${{ steps.login-ecr.outputs.registry }}/${{ secrets.REPOSITORY }}:${{ vars.STREAMING_STAGING_IMAGE_TAG }} 
       - name: Deploy Streaming service
         uses: aws-actions/amazon-ecs-deploy-task-definition@v2
         with:

@@ -1504,7 +1504,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_07_142305) do
     t.float "max_score"
     t.datetime "max_score_at", precision: nil
     t.string "display_name"
-    t.boolean "is_banned", default: false
     t.index "lower((name)::text) text_pattern_ops", name: "index_tags_on_name_lower_btree", unique: true
   end
 

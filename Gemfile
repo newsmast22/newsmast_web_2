@@ -239,6 +239,9 @@ gem 'content_filters', git: 'https://github.com/patchwork-hub/content_filters', 
 gem 'conversations', git: 'https://github.com/patchwork-hub/conversations', branch: 'main'
 gem 'posts', git: 'https://github.com/patchwork-hub/posts', branch: 'main'
 
+# *** Add this alongside Post Gems ***
+gem 'faraday-typhoeus', '~> 1.1'
+
 # gem 'accounts', path: '/Users/macbookpro/workplace/patchwork/accounts'
 # gem 'posts', path: '/Users/macbookpro/workplace/patchwork/posts'
 # gem 'conversations', path: '/Users/macbookpro/workplace/patchwork/conversations'

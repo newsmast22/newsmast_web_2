@@ -39,7 +39,7 @@ GIT
 
 GIT
   remote: https://github.com/patchwork-hub/posts
-  revision: d6da16ab60cfe59b46373b27c4b1fcad51bf29a5
+  revision: 0a93b2ef6395ee9ad6b473d0ab1793909ea47b7b
   branch: main
   specs:
     posts (0.1.0)
@@ -288,6 +288,9 @@ GEM
       httpclient (>= 2.2)
     faraday-net_http (3.4.0)
       net-http (>= 0.5.0)
+    faraday-typhoeus (1.1.0)
+      faraday (~> 2.0)
+      typhoeus (~> 1.4)
     fast_blank (1.0.1)
     fastimage (2.4.0)
     ffi (1.17.2)
@@ -1094,6 +1097,7 @@ DEPENDENCIES
   fabrication
   faker (~> 3.2)
   faraday-httpclient
+  faraday-typhoeus (~> 1.1)
   fast_blank (~> 1.0)
   fastimage
   flatware-rspec

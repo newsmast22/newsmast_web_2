@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_07_142305) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_19_093332) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -198,8 +198,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_07_142305) do
     t.datetime "requested_review_at", precision: nil
     t.boolean "indexable", default: false, null: false
     t.string "attribution_domains", default: [], array: true
-    t.string "devices_url"
-    t.boolean "is_banned", default: false
     t.string "following_url", default: "", null: false
     t.integer "id_scheme", default: 1
     t.index "(((setweight(to_tsvector('simple'::regconfig, (display_name)::text), 'A'::\"char\") || setweight(to_tsvector('simple'::regconfig, (username)::text), 'B'::\"char\")) || setweight(to_tsvector('simple'::regconfig, (COALESCE(domain, ''::character varying))::text), 'C'::\"char\")))", name: "search_index", using: :gin
@@ -358,6 +356,39 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_07_142305) do
     t.datetime "updated_at", null: false
     t.index ["canonical_email_hash"], name: "index_canonical_email_blocks_on_canonical_email_hash", unique: true
     t.index ["reference_account_id"], name: "index_canonical_email_blocks_on_reference_account_id"
+  end
+
+  create_table "collection_items", force: :cascade do |t|
+    t.bigint "collection_id", null: false
+    t.bigint "account_id"
+    t.integer "position", default: 1, null: false
+    t.string "object_uri"
+    t.string "approval_uri"
+    t.string "activity_uri"
+    t.datetime "approval_last_verified_at"
+    t.integer "state", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_collection_items_on_account_id"
+    t.index ["approval_uri"], name: "index_collection_items_on_approval_uri", unique: true, where: "(approval_uri IS NOT NULL)"
+    t.index ["collection_id"], name: "index_collection_items_on_collection_id"
+    t.index ["object_uri"], name: "index_collection_items_on_object_uri", unique: true, where: "(activity_uri IS NOT NULL)"
+  end
+
+  create_table "collections", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.string "name", null: false
+    t.text "description", null: false
+    t.string "uri"
+    t.boolean "local", null: false
+    t.boolean "sensitive", null: false
+    t.boolean "discoverable", null: false
+    t.bigint "tag_id"
+    t.integer "original_number_of_items"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_collections_on_account_id"
+    t.index ["tag_id"], name: "index_collections_on_tag_id"
   end
 
   create_table "conversation_mutes", force: :cascade do |t|
@@ -730,7 +761,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_07_142305) do
     t.integer "thumbnail_file_size"
     t.datetime "thumbnail_updated_at", precision: nil
     t.string "thumbnail_remote_url"
-    t.bigint "patchwork_drafted_status_id"
+    t.integer "thumbnail_storage_schema_version"
     t.index ["account_id", "status_id"], name: "index_media_attachments_on_account_id_and_status_id", order: { status_id: :desc }
     t.index ["patchwork_drafted_status_id"], name: "index_media_attachments_on_patchwork_drafted_status_id", where: "(patchwork_drafted_status_id IS NOT NULL)"
     t.index ["scheduled_status_id"], name: "index_media_attachments_on_scheduled_status_id", where: "(scheduled_status_id IS NOT NULL)"
@@ -1692,6 +1723,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_07_142305) do
   add_foreign_key "bulk_import_rows", "bulk_imports", on_delete: :cascade
   add_foreign_key "bulk_imports", "accounts", on_delete: :cascade
   add_foreign_key "canonical_email_blocks", "accounts", column: "reference_account_id", on_delete: :cascade
+  add_foreign_key "collection_items", "accounts"
+  add_foreign_key "collection_items", "collections", on_delete: :cascade
+  add_foreign_key "collections", "accounts"
+  add_foreign_key "collections", "tags"
   add_foreign_key "conversation_mutes", "accounts", name: "fk_225b4212bb", on_delete: :cascade
   add_foreign_key "conversation_mutes", "conversations", on_delete: :cascade
   add_foreign_key "custom_filter_keywords", "custom_filters", on_delete: :cascade
@@ -1819,53 +1854,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_07_142305) do
   add_foreign_key "web_settings", "users", name: "fk_11910667b2", on_delete: :cascade
   add_foreign_key "webauthn_credentials", "users", on_delete: :cascade
 
-  create_view "instances", materialized: true, sql_definition: <<-SQL
-      WITH domain_counts(domain, accounts_count) AS (
-           SELECT accounts.domain,
-              count(*) AS accounts_count
-             FROM accounts
-            WHERE (accounts.domain IS NOT NULL)
-            GROUP BY accounts.domain
-          )
-   SELECT domain_counts.domain,
-      domain_counts.accounts_count
-     FROM domain_counts
-  UNION
-   SELECT domain_blocks.domain,
-      COALESCE(domain_counts.accounts_count, (0)::bigint) AS accounts_count
-     FROM (domain_blocks
-       LEFT JOIN domain_counts ON (((domain_counts.domain)::text = (domain_blocks.domain)::text)))
-  UNION
-   SELECT domain_allows.domain,
-      COALESCE(domain_counts.accounts_count, (0)::bigint) AS accounts_count
-     FROM (domain_allows
-       LEFT JOIN domain_counts ON (((domain_counts.domain)::text = (domain_allows.domain)::text)));
-  SQL
-  add_index "instances", "reverse(('.'::text || (domain)::text)), domain", name: "index_instances_on_reverse_domain"
-  add_index "instances", ["domain"], name: "index_instances_on_domain", unique: true
-
-  create_view "user_ips", sql_definition: <<-SQL
-      SELECT t0.user_id,
-      t0.ip,
-      max(t0.used_at) AS used_at
-     FROM ( SELECT users.id AS user_id,
-              users.sign_up_ip AS ip,
-              users.created_at AS used_at
-             FROM users
-            WHERE (users.sign_up_ip IS NOT NULL)
-          UNION ALL
-           SELECT session_activations.user_id,
-              session_activations.ip,
-              session_activations.updated_at
-             FROM session_activations
-          UNION ALL
-           SELECT login_activities.user_id,
-              login_activities.ip,
-              login_activities.created_at
-             FROM login_activities
-            WHERE (login_activities.success = true)) t0
-    GROUP BY t0.user_id, t0.ip;
-  SQL
   create_view "account_summaries", materialized: true, sql_definition: <<-SQL
       SELECT accounts.id AS account_id,
       mode() WITHIN GROUP (ORDER BY t0.language) AS language,
@@ -1916,4 +1904,51 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_07_142305) do
   SQL
   add_index "global_follow_recommendations", ["account_id"], name: "index_global_follow_recommendations_on_account_id", unique: true
 
+  create_view "instances", materialized: true, sql_definition: <<-SQL
+      WITH domain_counts(domain, accounts_count) AS (
+           SELECT accounts.domain,
+              count(*) AS accounts_count
+             FROM accounts
+            WHERE (accounts.domain IS NOT NULL)
+            GROUP BY accounts.domain
+          )
+   SELECT domain_counts.domain,
+      domain_counts.accounts_count
+     FROM domain_counts
+  UNION
+   SELECT domain_blocks.domain,
+      COALESCE(domain_counts.accounts_count, (0)::bigint) AS accounts_count
+     FROM (domain_blocks
+       LEFT JOIN domain_counts ON (((domain_counts.domain)::text = (domain_blocks.domain)::text)))
+  UNION
+   SELECT domain_allows.domain,
+      COALESCE(domain_counts.accounts_count, (0)::bigint) AS accounts_count
+     FROM (domain_allows
+       LEFT JOIN domain_counts ON (((domain_counts.domain)::text = (domain_allows.domain)::text)));
+  SQL
+  add_index "instances", "reverse(('.'::text || (domain)::text)), domain", name: "index_instances_on_reverse_domain"
+  add_index "instances", ["domain"], name: "index_instances_on_domain", unique: true
+
+  create_view "user_ips", sql_definition: <<-SQL
+      SELECT user_id,
+      ip,
+      max(used_at) AS used_at
+     FROM ( SELECT users.id AS user_id,
+              users.sign_up_ip AS ip,
+              users.created_at AS used_at
+             FROM users
+            WHERE (users.sign_up_ip IS NOT NULL)
+          UNION ALL
+           SELECT session_activations.user_id,
+              session_activations.ip,
+              session_activations.updated_at
+             FROM session_activations
+          UNION ALL
+           SELECT login_activities.user_id,
+              login_activities.ip,
+              login_activities.created_at
+             FROM login_activities
+            WHERE (login_activities.success = true)) t0
+    GROUP BY user_id, ip;
+  SQL
 end

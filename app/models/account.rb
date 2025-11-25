@@ -12,11 +12,17 @@
 #  avatar_file_name              :string
 #  avatar_file_size              :integer
 #  avatar_remote_url             :string
-#  avatar_storage_schema_version :integer
-#  avatar_updated_at             :datetime
-#  discoverable                  :boolean
-#  display_name                  :string           default(""), not null
-#  domain                        :string
+#  locked                        :boolean          default(FALSE), not null
+#  header_remote_url             :string           default(""), not null
+#  last_webfingered_at           :datetime
+#  inbox_url                     :string           default(""), not null
+#  outbox_url                    :string           default(""), not null
+#  shared_inbox_url              :string           default(""), not null
+#  followers_url                 :string           default(""), not null
+#  following_url                 :string           default(""), not null
+#  protocol                      :integer          default("ostatus"), not null
+#  memorial                      :boolean          default(FALSE), not null
+#  moved_to_account_id           :bigint(8)
 #  featured_collection_url       :string
 #  fields                        :jsonb
 #  followers_url                 :string           default(""), not null
@@ -48,12 +54,11 @@
 #  suspended_at                  :datetime
 #  suspension_origin             :integer
 #  trendable                     :boolean
-#  uri                           :string           default(""), not null
-#  url                           :string
-#  username                      :string           default(""), not null
-#  created_at                    :datetime         not null
-#  updated_at                    :datetime         not null
-#  moved_to_account_id           :bigint(8)
+#  reviewed_at                   :datetime
+#  requested_review_at           :datetime
+#  indexable                     :boolean          default(FALSE), not null
+#  attribution_domains           :string           default([]), is an Array
+#  id_scheme                     :integer          default("numeric_ap_id")
 #
 
 class Account < ApplicationRecord
@@ -107,6 +112,7 @@ class Account < ApplicationRecord
 
   enum :protocol, { ostatus: 0, activitypub: 1 }
   enum :suspension_origin, { local: 0, remote: 1 }, prefix: true
+  enum :id_scheme, { username_ap_id: 0, numeric_ap_id: 1 }
 
   validates :username, presence: true
   validates_with UniqueUsernameValidator, if: -> { will_save_change_to_username? }
@@ -126,6 +132,7 @@ class Account < ApplicationRecord
   validates_with EmptyProfileFieldNamesValidator, if: -> { local? && will_save_change_to_fields? }
   with_options on: :create, if: :local? do
     validates :followers_url, absence: true
+    validates :following_url, absence: true
     validates :inbox_url, absence: true
     validates :shared_inbox_url, absence: true
     validates :uri, absence: true

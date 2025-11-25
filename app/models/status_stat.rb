@@ -35,6 +35,10 @@ class StatusStat < ApplicationRecord
     [attributes['favourites_count'], 0].max
   end
 
+  def quotes_count
+    [attributes['quotes_count'], 0].max
+  end
+
   private
 
   def clamp_untrusted_counts

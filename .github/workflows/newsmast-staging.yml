@@ -79,7 +79,8 @@ jobs:
         run: |
           echo "Installing dependencies with Yarn..."
           yarn --version
-          YARN_ENABLE_IMMUTABLE_INSTALLS=false yarn install
+          rm -f .yarn/install-state.gz
+          YARN_ENABLE_IMMUTABLE_INSTALLS=false yarn install --mode=update-lockfile
 
   build-web:
     name: Build Web Application

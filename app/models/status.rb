@@ -11,6 +11,7 @@
 #  language                     :string
 #  local                        :boolean
 #  ordered_media_attachment_ids :bigint(8)        is an Array
+#  quote_approval_policy        :integer          default(0), not null
 #  reply                        :boolean          default(FALSE), not null
 #  sensitive                    :boolean          default(FALSE), not null
 #  spoiler_text                 :text             default(""), not null
@@ -27,6 +28,7 @@
 #  in_reply_to_account_id       :bigint(8)
 #  in_reply_to_id               :bigint(8)
 #  poll_id                      :bigint(8)
+#  quote_id                     :bigint(8)
 #  reblog_of_id                 :bigint(8)
 #
 

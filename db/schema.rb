@@ -198,6 +198,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_19_093332) do
     t.datetime "requested_review_at", precision: nil
     t.boolean "indexable", default: false, null: false
     t.string "attribution_domains", default: [], array: true
+    t.string "devices_url"
+    t.boolean "is_banned", default: false
     t.string "following_url", default: "", null: false
     t.integer "id_scheme", default: 1
     t.index "(((setweight(to_tsvector('simple'::regconfig, (display_name)::text), 'A'::\"char\") || setweight(to_tsvector('simple'::regconfig, (username)::text), 'B'::\"char\")) || setweight(to_tsvector('simple'::regconfig, (COALESCE(domain, ''::character varying))::text), 'C'::\"char\")))", name: "search_index", using: :gin
@@ -761,6 +763,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_19_093332) do
     t.integer "thumbnail_file_size"
     t.datetime "thumbnail_updated_at", precision: nil
     t.string "thumbnail_remote_url"
+    t.bigint "patchwork_drafted_status_id"
     t.integer "thumbnail_storage_schema_version"
     t.index ["account_id", "status_id"], name: "index_media_attachments_on_account_id_and_status_id", order: { status_id: :desc }
     t.index ["patchwork_drafted_status_id"], name: "index_media_attachments_on_patchwork_drafted_status_id", where: "(patchwork_drafted_status_id IS NOT NULL)"
@@ -1486,6 +1489,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_19_093332) do
     t.boolean "trendable"
     t.bigint "ordered_media_attachment_ids", array: true
     t.boolean "is_banned", default: false
+    t.bigint "quote_id"
+    t.integer "quote_approval_policy", default: 0, null: false
     t.index ["account_id", "id", "visibility", "updated_at"], name: "index_statuses_20190820", order: { id: :desc }, where: "(deleted_at IS NULL)"
     t.index ["account_id"], name: "index_statuses_on_account_id"
     t.index ["conversation_id"], name: "index_statuses_on_conversation_id"
@@ -1930,9 +1935,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_19_093332) do
   add_index "instances", ["domain"], name: "index_instances_on_domain", unique: true
 
   create_view "user_ips", sql_definition: <<-SQL
-      SELECT user_id,
-      ip,
-      max(used_at) AS used_at
+      SELECT t0.user_id,
+      t0.ip,
+      max(t0.used_at) AS used_at
      FROM ( SELECT users.id AS user_id,
               users.sign_up_ip AS ip,
               users.created_at AS used_at
@@ -1949,6 +1954,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_19_093332) do
               login_activities.created_at
              FROM login_activities
             WHERE (login_activities.success = true)) t0
-    GROUP BY user_id, ip;
+    GROUP BY t0.user_id, t0.ip;
   SQL
 end

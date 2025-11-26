@@ -7,47 +7,6 @@ GIT
       hkdf (~> 0.2)
       jwt (~> 2.0)
 
-GIT
-  remote: https://github.com/patchwork-hub/accounts
-  revision: da73b0f16d1afcb7c15898aa5fa56d687cb8ea7c
-  branch: mastodon-update-account
-  specs:
-    accounts (0.1.0)
-      byebug (~> 11.1)
-      googleauth (~> 1.13, >= 1.13.1)
-      httparty (~> 0.23.1)
-      rails (~> 8.0)
-
-GIT
-  remote: https://github.com/patchwork-hub/content_filters
-  revision: 4e769377cf7a17e22f4c8acd98c471a5c8711c5c
-  branch: main
-  specs:
-    content_filters (0.1.0)
-      httparty (~> 0.23.1)
-      rails (~> 8.0)
-
-GIT
-  remote: https://github.com/patchwork-hub/conversations
-  revision: f9e15a6313e90633a8d2e0c73e40d5ce0ddff0b8
-  branch: main
-  specs:
-    conversations (0.1.0)
-      annotaterb (~> 4.13)
-      byebug (~> 11.1)
-      rails (~> 8.0)
-
-GIT
-  remote: https://github.com/patchwork-hub/posts
-  revision: 0a93b2ef6395ee9ad6b473d0ab1793909ea47b7b
-  branch: main
-  specs:
-    posts (0.1.0)
-      annotaterb (~> 4.13)
-      byebug (~> 11.1)
-      link_thumbnailer (~> 3.4)
-      rails (~> 8.0)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -134,7 +93,6 @@ GEM
     annotaterb (4.20.0)
       activerecord (>= 6.0.0)
       activesupport (>= 6.0.0)
-    ansi (1.5.0)
     ast (2.4.3)
     attr_required (1.0.2)
     aws-eventstream (1.4.0)
@@ -289,9 +247,6 @@ GEM
       httpclient (>= 2.2)
     faraday-net_http (3.4.1)
       net-http (>= 0.5.0)
-    faraday-typhoeus (1.1.0)
-      faraday (~> 2.0)
-      typhoeus (~> 1.4)
     fast_blank (1.0.1)
     fastimage (2.4.0)
     ffi (1.17.2)
@@ -365,10 +320,6 @@ GEM
       domain_name (~> 0.5)
     http-form_data (2.3.0)
     http_accept_language (2.1.1)
-    httparty (0.23.2)
-      csv
-      mini_mime (>= 1.0.0)
-      multi_xml (>= 0.5.2)
     httpclient (2.9.0)
       mutex_m
     httplog (1.7.3)
@@ -389,11 +340,6 @@ GEM
       ruby-progressbar (~> 1.8, >= 1.8.1)
       terminal-table (>= 1.5.1)
     idn-ruby (0.1.5)
-    image_info (1.2.2)
-      addressable (~> 2.0)
-      image_size (~> 2.0)
-      typhoeus (~> 1.0)
-    image_size (2.1.2)
     inline_svg (1.10.0)
       activesupport (>= 3.0)
       nokogiri (>= 1.6)
@@ -402,7 +348,6 @@ GEM
       pp (>= 0.6.0)
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
-    iso8601 (0.13.0)
     jd-paperclip-azure (3.0.0)
       addressable (~> 2.5)
       azure-blob (~> 0.5.2)
@@ -465,14 +410,6 @@ GEM
       railties (>= 6.1)
       rexml
     link_header (0.0.8)
-    link_thumbnailer (3.4.0)
-      activesupport (>= 3.0)
-      image_info (~> 1.0, >= 1.2.0)
-      json (>= 1.7.7)
-      net-http-persistent (>= 2.9)
-      nokogiri (>= 1.6)
-      rake (>= 0.9)
-      video_info (>= 2.6)
     lint_roller (1.1.0)
     linzer (0.7.7)
       cgi (~> 0.4.2)
@@ -531,7 +468,6 @@ GEM
       timeout
     net-smtp (0.5.1)
       net-protocol
-    net_http_timeout_errors (1.0.0)
     nio4r (2.7.4)
     nokogiri (1.18.10)
       mini_portile2 (~> 2.8.2)
@@ -853,9 +789,6 @@ GEM
       lint_roller (~> 1.1)
       rubocop (~> 1.72, >= 1.72.1)
       rubocop-rspec (~> 3.5)
-    ruby-ll (2.1.4)
-      ansi
-      ast
     ruby-prof (1.7.2)
       base64
     ruby-progressbar (1.13.0)
@@ -894,11 +827,6 @@ GEM
       concurrent-ruby (~> 1.0, >= 1.0.5)
       sidekiq (>= 7.0.0, < 9.0.0)
       thor (>= 1.0, < 3.0)
-    signet (0.21.0)
-      addressable (~> 2.8)
-      faraday (>= 0.17.5, < 3.a)
-      jwt (>= 1.5, < 4.0)
-      multi_json (~> 1.10)
     simple-navigation (4.4.0)
       activesupport (>= 2.3.2)
     simple_form (5.4.0)
@@ -952,8 +880,6 @@ GEM
     twitter-text (3.1.0)
       idn-ruby
       unf (~> 0.1.0)
-    typhoeus (1.5.0)
-      ethon (>= 0.9.0, < 0.16.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     tzinfo-data (1.2025.2)
@@ -969,10 +895,6 @@ GEM
     validate_url (1.0.15)
       activemodel (>= 3.0.0)
       public_suffix
-    video_info (4.2.0)
-      iso8601 (~> 0.13.0)
-      net_http_timeout_errors (~> 1.0.0)
-      oga (~> 3.4)
     vite_rails (3.0.19)
       railties (>= 5.1, < 9)
       vite_ruby (~> 3.0, >= 3.2.2)
@@ -1017,7 +939,6 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
-  accounts!
   active_model_serializers (~> 0.10)
   addressable (~> 2.8)
   annotaterb (~> 4.13)
@@ -1040,8 +961,6 @@ DEPENDENCIES
   color_diff (~> 0.1)
   concurrent-ruby
   connection_pool
-  content_filters!
-  conversations!
   csv (~> 3.2)
   database_cleaner-active_record
   debug (~> 1.8)
@@ -1055,7 +974,6 @@ DEPENDENCIES
   fabrication
   faker (~> 3.2)
   faraday-httpclient
-  faraday-typhoeus (~> 1.1)
   fast_blank (~> 1.0)
   fastimage
   flatware-rspec

@@ -12,17 +12,11 @@
 #  avatar_file_name              :string
 #  avatar_file_size              :integer
 #  avatar_remote_url             :string
-#  locked                        :boolean          default(FALSE), not null
-#  header_remote_url             :string           default(""), not null
-#  last_webfingered_at           :datetime
-#  inbox_url                     :string           default(""), not null
-#  outbox_url                    :string           default(""), not null
-#  shared_inbox_url              :string           default(""), not null
-#  followers_url                 :string           default(""), not null
-#  following_url                 :string           default(""), not null
-#  protocol                      :integer          default("ostatus"), not null
-#  memorial                      :boolean          default(FALSE), not null
-#  moved_to_account_id           :bigint(8)
+#  avatar_storage_schema_version :integer
+#  avatar_updated_at             :datetime
+#  discoverable                  :boolean
+#  display_name                  :string           default(""), not null
+#  domain                        :string
 #  featured_collection_url       :string
 #  fields                        :jsonb
 #  followers_url                 :string           default(""), not null
@@ -34,7 +28,7 @@
 #  header_storage_schema_version :integer
 #  header_updated_at             :datetime
 #  hide_collections              :boolean
-#  id_scheme                     :integer          default(1)
+#  id_scheme                     :integer          default("numeric_ap_id")
 #  inbox_url                     :string           default(""), not null
 #  indexable                     :boolean          default(FALSE), not null
 #  is_banned                     :boolean          default(FALSE)
@@ -54,11 +48,12 @@
 #  suspended_at                  :datetime
 #  suspension_origin             :integer
 #  trendable                     :boolean
-#  reviewed_at                   :datetime
-#  requested_review_at           :datetime
-#  indexable                     :boolean          default(FALSE), not null
-#  attribution_domains           :string           default([]), is an Array
-#  id_scheme                     :integer          default("numeric_ap_id")
+#  uri                           :string           default(""), not null
+#  url                           :string
+#  username                      :string           default(""), not null
+#  created_at                    :datetime         not null
+#  updated_at                    :datetime         not null
+#  moved_to_account_id           :bigint(8)
 #
 
 class Account < ApplicationRecord

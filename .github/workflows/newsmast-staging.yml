@@ -77,9 +77,9 @@ jobs:
       - name: Install dependencies
         if: steps.cache-deps.outputs.cache-hit != 'true'
         run: |
-          echo "Installing dependencies with Yarn 4.9.1..."
+          echo "Installing dependencies with Yarn..."
           yarn --version
-          yarn install --immutable
+          yarn install
 
   build-web:
     name: Build Web Application

@@ -79,7 +79,7 @@ jobs:
         run: |
           echo "Installing dependencies with Yarn..."
           yarn --version
-          yarn install
+          YARN_ENABLE_IMMUTABLE_INSTALLS=false yarn install
 
   build-web:
     name: Build Web Application

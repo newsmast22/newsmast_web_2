@@ -39,8 +39,8 @@ GIT
 
 GIT
   remote: https://github.com/patchwork-hub/posts
-  revision: c98ea5c6ea8f70379203ac12e90a99b966c723b2
-  branch: main
+  revision: 4870a94680e75115bd12a1abdcdfe239b22c910d
+  branch: v_450
   specs:
     posts (0.1.0)
       annotaterb (~> 4.13)
